@@ -10,6 +10,14 @@ const github = __nccwpck_require__(695);
 
 try {
   const context = github.context;
+  core.debug("Info dump")
+  core.debug(github.context)
+  core.debug(github.context.eventName)
+  core.debug(github.context.action)
+  core.debug(github.context.payload)
+  core.debug(github.context.pull_request)
+  core.debug(github.context.pull_request_number)
+
   if (context.payload.pull_request == null) {
       core.setFailed('No pull request found.');
       return;
