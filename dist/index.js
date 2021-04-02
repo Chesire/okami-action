@@ -21,11 +21,14 @@ async function run() {
     const prNumber = context.payload.pull_request.number;
     
     const picture = getShibaPicture()
+    console.log(`picture data ${picture}`)
+
+    const commentBody = `[shibe]{{$picture}}`
 
     octokit.issues.createComment({
         ...context.repo,
         issue_number: prNumber,
-        body: "Test"
+        body: commentBody
     });
 }
 
