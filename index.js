@@ -13,13 +13,11 @@ async function run() {
     const octokit = github.getOctokit(token);
     const prNumber = context.payload.pull_request.number;
     
-    // octokit.rest.pulls.createReviewComment({
-    octokit.pulls.createReviewComment({
-        //...context.owner,
+    octokit.issues.createComment({
         ...context.repo,
-        pull_number: prNumber,
-        body: "Test",
-    });
+        issue_number: prNumber,
+        body: "Test"
+      });
 }
 
 run();
