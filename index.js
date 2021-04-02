@@ -7,12 +7,11 @@ async function run() {
         core.setFailed('No pull request found.');
         return;
     }
-
-    const githubToken = core.getInput('GITHUB_TOKEN');
-    const octokit = github.getOctokit(githubToken);
-    const prNumber = context.payload.pull_request.number;
     
-    console.log(pullRequest);
+    const githubToken = core.getInput('GITHUB_TOKEN');
+    const octokit = github.getOctokit(githubToken)
+    const prNumber = context.payload.pull_request.number
+    
     // octokit.rest.pulls.createReviewComment({
     octokit.pulls.createReviewComment({
         //...context.owner,
