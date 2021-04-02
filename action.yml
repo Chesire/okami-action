@@ -1,6 +1,9 @@
 name: 'Hello World'
 description: 'Greet someone and record the time'
 inputs:
+  okami-token:
+    description: 'The GITHUB_TOKEN secret'
+    required: true
   who-to-greet:  # id of input
     description: 'Who to greet'
     required: true

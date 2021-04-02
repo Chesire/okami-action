@@ -8,11 +8,11 @@ async function run() {
         return;
     }
 
-    const githubToken = core.getInput('GITHUB_TOKEN');
-    const octokit = github.getOctokit(githubToken);
+// github.token ?
+    const token = core.getInput('okami-token');
+    const octokit = github.getOctokit(token);
     const prNumber = context.payload.pull_request.number;
     
-    console.log(pullRequest);
     // octokit.rest.pulls.createReviewComment({
     octokit.pulls.createReviewComment({
         //...context.owner,
