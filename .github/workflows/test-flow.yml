@@ -10,8 +10,25 @@ jobs:
       # you must check out the repository
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Post step
-        uses: ./ # Uses an action in the root directory
+      - name: Post Default
+        uses: ./
         with:
           okami-token: ${{ secrets.GITHUB_TOKEN }}
-          # animal-type: "shiba"
+          
+      - name: Post shiba
+        uses: ./
+        with:
+          okami-token: ${{ secrets.GITHUB_TOKEN }}
+          animal-type: "shiba"
+          
+      - name: Post cat
+        uses: ./
+        with:
+          okami-token: ${{ secrets.GITHUB_TOKEN }}
+          animal-type: "cat"
+          
+      - name: Post bird
+        uses: ./
+        with:
+          okami-token: ${{ secrets.GITHUB_TOKEN }}
+          animal-type: "bird"
