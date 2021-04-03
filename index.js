@@ -2,6 +2,12 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 const axios = require('axios');
 
+var animal = {
+    shiba: "SHIBA",
+    cat: "CAT",
+    bird: "BIRD"
+}
+
 async function run() {
     const context = github.context;
     if (context.payload.pull_request == null) {
@@ -9,16 +15,30 @@ async function run() {
         return;
     }
 
-    const image = await getImageUrl();
+    const image = await getAnimalImageUrl();
     console.log(`image url - ${image}`);
     postImageToPR(context, image)
 }
 
-async function getImageUrl() {
-    const url = getAnimalUrl()
+async function getAnimalImageUrl() {
+    const animalInput = core.getInput('animal-type')
+    const animalType = animalInput.toUpperCase()
+
+    if (animalType == animal.shiba) {
+        return getShibaImage()
+    } else if (animalType == animal.cat) {
+        return getCatImage()
+    } else if (animalType == animal.bird) {
+        return getBirdImage()
+    } else {
+        core.setFailed("Invalid animal input" + animalInput)
+    }
+}
+
+async function getShibaImage() {
     var pictureUrl = ""
     try {
-        const response = await axios.get(url)
+        const response = await axios.get("http://shibe.online/api/shibe")
         pictureUrl = response.data[0];
     } catch (error) {
         console.error(error);
@@ -27,18 +47,28 @@ async function getImageUrl() {
     return pictureUrl;
 }
 
-function getAnimalUrl() {
-    const animalInput = core.getInput('animal-type')
-    const animalType = animalInput.toUpperCase()
-    if (animalType == "shiba".toUpperCase()) {
-        return "http://shibe.online/api/shibes"
-    } else if (animalType == "cat".toUpperCase()) {
-        return "http://shibe.online/api/cats"
-    } else if (animalType == "bird".toUpperCase()) {
-        return "http://shibe.online/api/birds"
-    } else {
-        core.setFailed("Invalid animal input" + animalInput)
+async function getCatImage() {
+    var pictureUrl = ""
+    try {
+        const response = await axios.get("http://shibe.online/api/cats")
+        pictureUrl = response.data[0];
+    } catch (error) {
+        console.error(error);
     }
+
+    return pictureUrl;
+}
+
+async function getBirdImage() {
+    var pictureUrl = ""
+    try {
+        const response = await axios.get("http://shibe.online/api/birds")
+        pictureUrl = response.data[0];
+    } catch (error) {
+        console.error(error);
+    }
+
+    return pictureUrl;
 }
 
 async function postImageToPR(context, picture) {
