@@ -15,15 +15,30 @@ async function run() {
 }
 
 async function getImageUrl() {
-    var shibaUrl = ""
+    const url = getAnimalUrl()
+    var pictureUrl = ""
     try {
-        const response = await axios.get("http://shibe.online/api/shibes")
-        shibaUrl = response.data[0];
+        const response = await axios.get(url)
+        pictureUrl = response.data[0];
     } catch (error) {
         console.error(error);
     }
 
-    return shibaUrl;
+    return pictureUrl;
+}
+
+function getAnimalUrl() {
+    const animalInput = core.getInput('animal-type')
+    const animalType = animalInput.toUpperCase()
+    if (animalType == "shiba".toUpperCase()) {
+        return "http://shibe.online/api/shibes"
+    } else if (animalType == "cat".toUpperCase()) {
+        return "http://shibe.online/api/cats"
+    } else if (animalType == "bird".toUpperCase()) {
+        return "http://shibe.online/api/birds"
+    } else {
+        core.setFailed("Invalid animal input" + animalInput)
+    }
 }
 
 async function postImageToPR(context, picture) {
@@ -41,5 +56,4 @@ async function postImageToPR(context, picture) {
     console.log("Finished createComment")
 }
 
-// /api/cats or birds at /api/birds
 run();

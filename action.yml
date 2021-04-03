@@ -1,16 +1,13 @@
-name: 'Hello World'
-description: 'Greet someone and record the time'
+name: 'Okami'
+description: 'Post an image of a cute animal to your PR'
 inputs:
   okami-token:
     description: 'The GITHUB_TOKEN secret'
     required: true
-  who-to-greet:  # id of input
-    description: 'Who to greet'
-    required: true
-    default: 'World'
-outputs:
-  time: # id of output
-    description: 'The time we greeted you'
+  animal-type:  # Type of the animal to post, defaults to 'shiba'
+    description: 'What animal type image to post to the pull request'
+    required: false
+    default: 'shiba'
 runs:
   using: 'node12'
   main: 'dist/index.js'

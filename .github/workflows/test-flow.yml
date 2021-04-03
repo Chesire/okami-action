@@ -1,22 +1,17 @@
 on:
-  push:
   pull_request:
 
 jobs:
-  hello_world_job:
+  test_job:
     runs-on: ubuntu-latest
-    name: A job to say hello
+    name: Job to test the action
     steps:
       # To use this repository's private action,
       # you must check out the repository
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Hello world action step
+      - name: Post step
         uses: ./ # Uses an action in the root directory
-        id: hello
         with:
-          who-to-greet: '@Chesire'
           okami-token: ${{ secrets.GITHUB_TOKEN }}
-      # Use the output from the `hello` step
-      - name: Get the output time
-        run: echo "The time was ${{ steps.hello.outputs.time }}"
+          # animal-type: "shiba"
