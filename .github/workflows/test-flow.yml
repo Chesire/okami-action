@@ -38,3 +38,9 @@ jobs:
         with:
           okami-token: ${{ secrets.GITHUB_TOKEN }}
           animal-type: "fox"
+
+      - name: Post dog
+        uses: ./
+        with:
+          okami-token: ${{ secrets.GITHUB_TOKEN }}
+          animal-type: "dog"

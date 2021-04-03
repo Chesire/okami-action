@@ -13,7 +13,8 @@ var animal = {
     shiba: "SHIBA",
     cat: "CAT",
     bird: "BIRD",
-    fox: "FOX"
+    fox: "FOX",
+    dog: "DOG"
 }
 
 async function run() {
@@ -24,8 +25,12 @@ async function run() {
     }
 
     const image = await getAnimalImageUrl()
-    console.log(`image url - ${image}`)
-    postImageToPR(context, image)
+    if (image === "") {
+        console.error("No image url found! Not posting a comment")
+    } else {
+        console.log(`image url - ${image}`)
+        postImageToPR(context, image)
+    }
 }
 
 async function getAnimalImageUrl() {
@@ -40,13 +45,15 @@ async function getAnimalImageUrl() {
         return getBirdImage()
     } else if (animalType == animal.fox) {
         return getFoxImage()
+    } else if (animalType == animal.dog) {
+        return getDogImage()
     } else {
         core.setFailed("Invalid animal input" + animalInput)
     }
 }
 
 async function getShibaImage() {
-    return getShibeOnlineImage("shibe")
+    return getShibeOnlineImage("shibes")
 }
 
 async function getCatImage() {
@@ -74,6 +81,18 @@ async function getFoxImage() {
     try {
         const response = await axios.get("https://randomfox.ca/floof/")
         pictureUrl = response.data.image
+    } catch (error) {
+        console.error(error)
+    }
+
+    return pictureUrl
+}
+
+async function getDogImage() {
+    var pictureUrl = ""
+    try {
+        const response = await axios.get("https://dog.ceo/api/breeds/image/random")
+        pictureUrl = response.data.message
     } catch (error) {
         console.error(error)
     }
