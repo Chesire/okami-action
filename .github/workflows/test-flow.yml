@@ -14,21 +14,27 @@ jobs:
         uses: ./
         with:
           okami-token: ${{ secrets.GITHUB_TOKEN }}
-          
+
       - name: Post shiba
         uses: ./
         with:
           okami-token: ${{ secrets.GITHUB_TOKEN }}
           animal-type: "shiba"
-          
+
       - name: Post cat
         uses: ./
         with:
           okami-token: ${{ secrets.GITHUB_TOKEN }}
           animal-type: "cat"
-          
+
       - name: Post bird
         uses: ./
         with:
           okami-token: ${{ secrets.GITHUB_TOKEN }}
           animal-type: "bird"
+
+      - name: Post fox
+        uses: ./
+        with:
+          okami-token: ${{ secrets.GITHUB_TOKEN }}
+          animal-type: "fox"

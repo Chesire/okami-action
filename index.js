@@ -1,22 +1,23 @@
-const core = require('@actions/core');
-const github = require('@actions/github');
-const axios = require('axios');
+const core = require('@actions/core')
+const github = require('@actions/github')
+const axios = require('axios')
 
 var animal = {
     shiba: "SHIBA",
     cat: "CAT",
-    bird: "BIRD"
+    bird: "BIRD",
+    fox: "FOX"
 }
 
 async function run() {
-    const context = github.context;
+    const context = github.context
     if (context.payload.pull_request == null) {
         console.error("Not currently running in a pull request")
-        return;
+        return
     }
 
-    const image = await getAnimalImageUrl();
-    console.log(`image url - ${image}`);
+    const image = await getAnimalImageUrl()
+    console.log(`image url - ${image}`)
     postImageToPR(context, image)
 }
 
@@ -30,60 +31,62 @@ async function getAnimalImageUrl() {
         return getCatImage()
     } else if (animalType == animal.bird) {
         return getBirdImage()
+    } else if (animalType == animal.fox) {
+        return getFoxImage()
     } else {
         core.setFailed("Invalid animal input" + animalInput)
     }
 }
 
 async function getShibaImage() {
-    var pictureUrl = ""
-    try {
-        const response = await axios.get("http://shibe.online/api/shibe")
-        pictureUrl = response.data[0];
-    } catch (error) {
-        console.error(error);
-    }
-
-    return pictureUrl;
+    return getShibeOnlineImage("shibes")
 }
 
 async function getCatImage() {
-    var pictureUrl = ""
-    try {
-        const response = await axios.get("http://shibe.online/api/cats")
-        pictureUrl = response.data[0];
-    } catch (error) {
-        console.error(error);
-    }
-
-    return pictureUrl;
+    return getShibeOnlineImage("cats")
 }
 
 async function getBirdImage() {
+    return getShibeOnlineImage("birds")
+}
+
+async function getShibeOnlineImage(param) {
     var pictureUrl = ""
     try {
-        const response = await axios.get("http://shibe.online/api/birds")
-        pictureUrl = response.data[0];
+        const response = await axios.get("http://shibe.online/api/" + param)
+        pictureUrl = response.data[0]
     } catch (error) {
-        console.error(error);
+        console.error(error)
     }
 
-    return pictureUrl;
+    return pictureUrl
+}
+
+async function getFoxImage() {
+    var pictureUrl = ""
+    try {
+        const response = await axios.get("https://randomfox.ca/floof/")
+        pictureUrl = response.data.image
+    } catch (error) {
+        console.error(error)
+    }
+
+    return pictureUrl
 }
 
 async function postImageToPR(context, picture) {
-    const token = core.getInput('okami-token');
-    const octokit = github.getOctokit(token);
-    const prNumber = context.payload.pull_request.number;
+    const token = core.getInput('okami-token')
+    const octokit = github.getOctokit(token)
+    const prNumber = context.payload.pull_request.number
     const commentBody = `![](${picture})`
 
     octokit.issues.createComment({
         ...context.repo,
         issue_number: prNumber,
         body: commentBody
-    });
+    })
 
     console.log("Finished createComment")
 }
 
-run();
+run()
