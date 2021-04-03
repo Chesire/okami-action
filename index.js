@@ -17,8 +17,12 @@ async function run() {
     }
 
     const image = await getAnimalImageUrl()
-    console.log(`image url - ${image}`)
-    postImageToPR(context, image)
+    if (image === "") {
+        console.error("No image url found! Not posting a comment")
+    } else {
+        console.log(`image url - ${image}`)
+        postImageToPR(context, image)
+    }
 }
 
 async function getAnimalImageUrl() {
