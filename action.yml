@@ -1,10 +1,10 @@
-name: 'Okami'
-description: 'Post an image of a cute animal to your PR'
+name: 'okami-action'
+description: 'Post an image of a cute animal straight to your PR'
 inputs:
   okami-token:
     description: 'The GITHUB_TOKEN secret'
     required: true
-  animal-type:  # Type of the animal to post, defaults to 'shiba'
+  animal-type:
     description: 'What animal type image to post to the pull request'
     required: false
     default: 'shiba'
