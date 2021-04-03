@@ -11,7 +11,7 @@ async function run() {
 
     const image = await getImageUrl();
     console.log(`image url - ${image}`);
-    postImageToPR(image)
+    postImageToPR(context, image)
 }
 
 async function getImageUrl() {
@@ -26,7 +26,7 @@ async function getImageUrl() {
     return shibaUrl;
 }
 
-async function postImageToPR(picture) {
+async function postImageToPR(context, picture) {
     const token = core.getInput('okami-token');
     const octokit = github.getOctokit(token);
     const prNumber = context.payload.pull_request.number;
@@ -37,6 +37,8 @@ async function postImageToPR(picture) {
         issue_number: prNumber,
         body: commentBody
     });
+
+    console.log("Finished createComment")
 }
 
 // /api/cats or birds at /api/birds
