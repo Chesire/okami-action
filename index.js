@@ -1,6 +1,6 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
-const https = require('https');
+const axios = require('axios');
 
 async function run() {
     const context = github.context;
@@ -13,10 +13,10 @@ async function run() {
     const octokit = github.getOctokit(token);
     const prNumber = context.payload.pull_request.number;
     
-    const picture = getShibaPicture()
-    console.log(`picture data ${picture}`)
+    const picture = await getShibaPicture();
+    console.log(`picture url - ${picture}`);
 
-    const commentBody = `[shibe]{{$picture}}`
+    const commentBody = `[shibe](${picture})`
 
     octokit.issues.createComment({
         ...context.repo,
@@ -26,30 +26,15 @@ async function run() {
 }
 
 async function getShibaPicture() {
-    var result = '';
-    const options = {
-        hostname: 'shibe.online',
-        path: '/api/shibes',
-        method: 'GET'
+    var shibaUrl = ""
+    try {
+        const response = await axios.get("http://shibe.online/api/shibes")
+        shibaUrl = response.data[0];
+    } catch (error) {
+        console.error(error);
     }
-// http://shibe.online/api/shibes?urls=[true/false]
 
-    const req = https.request(options, res => {
-        console.log(`statusCode: ${res.statusCode}`)
-
-        res.on('data', d => {
-            result += d
-        })
-        res.on('error', error => {
-            console.log(`error occurred: ${error}`)
-        })
-        res.on('end', () => {
-            console.log(`ended ${result}`)
-        })
-    })
-
-    req.end()
-    return result
+    return shibaUrl;
 }
 
 
