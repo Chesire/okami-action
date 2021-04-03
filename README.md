@@ -1,4 +1,4 @@
-# Okami
+# okami-action
 
 This action adds a random image of an animal to your PR every time it is run.
 
@@ -24,7 +24,7 @@ Defaults to `shiba`
 ## Example usage
 
 ```yaml
-uses: Chesire/Okami@v1
+uses: Chesire/okami-action@v1
 with:
   okami-token: ${{ secrets.GITHUB_TOKEN }}
   animal-type: "shiba"
