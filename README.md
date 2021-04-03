@@ -24,7 +24,7 @@ Defaults to `shiba`
 ## Example usage
 
 ```yaml
-uses: Chesire/okami-action@v1
+uses: Chesire/okami-action@v2
 with:
   okami-token: ${{ secrets.GITHUB_TOKEN }}
   animal-type: "shiba"
