@@ -12,7 +12,7 @@ const axios = __nccwpck_require__(3242);
 async function run() {
     const context = github.context;
     if (context.payload.pull_request == null) {
-        core.setFailed('No pull request found.');
+        console.error("Not currently running in a pull request")
         return;
     }
 
@@ -23,7 +23,7 @@ async function run() {
     const picture = await getShibaPicture();
     console.log(`picture url - ${picture}`);
 
-    const commentBody = `[shibe](${picture})`
+    const commentBody = `![](${picture})`
 
     octokit.issues.createComment({
         ...context.repo,

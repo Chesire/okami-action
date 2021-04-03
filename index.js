@@ -5,7 +5,7 @@ const axios = require('axios');
 async function run() {
     const context = github.context;
     if (context.payload.pull_request == null) {
-        core.setFailed('No pull request found.');
+        console.error("Not currently running in a pull request")
         return;
     }
 
@@ -16,7 +16,7 @@ async function run() {
     const picture = await getShibaPicture();
     console.log(`picture url - ${picture}`);
 
-    const commentBody = `[shibe](${picture})`
+    const commentBody = `![](${picture})`
 
     octokit.issues.createComment({
         ...context.repo,
