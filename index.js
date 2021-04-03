@@ -21,7 +21,6 @@ async function run() {
     if (image === "") {
         console.error("No image url found! Not posting a comment")
     } else {
-        console.log(`image url - ${image}`)
         postImageToPR(context, image)
     }
 }
@@ -30,6 +29,7 @@ async function getAnimalImageUrl() {
     const animalInput = core.getInput('animal-type')
     const animalType = animalInput.toUpperCase()
 
+    console.log("Looking for animal " + animalType)
     if (animalType == animal.shiba) {
         return getShibaImage()
     } else if (animalType == animal.cat) {
@@ -98,6 +98,8 @@ async function postImageToPR(context, picture) {
     const octokit = github.getOctokit(token)
     const prNumber = context.payload.pull_request.number
     const commentBody = `![](${picture})`
+
+    console.log("Posting comment " + commentBody)
 
     octokit.issues.createComment({
         ...context.repo,
