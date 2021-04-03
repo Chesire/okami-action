@@ -1,6 +1,6 @@
-# Okami action
+# Okami
 
-This actions adds a random image of an animal to your PR every time it is run.
+This action adds a random image of an animal to your PR every time it is run.
 
 ## Inputs
 
