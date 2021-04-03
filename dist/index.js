@@ -16,23 +16,12 @@ async function run() {
         return;
     }
 
-    const token = core.getInput('okami-token');
-    const octokit = github.getOctokit(token);
-    const prNumber = context.payload.pull_request.number;
-    
-    const picture = await getShibaPicture();
-    console.log(`picture url - ${picture}`);
-
-    const commentBody = `![](${picture})`
-
-    octokit.issues.createComment({
-        ...context.repo,
-        issue_number: prNumber,
-        body: commentBody
-    });
+    const image = await getImageUrl();
+    console.log(`image url - ${image}`);
+    postImageToPR(image)
 }
 
-async function getShibaPicture() {
+async function getImageUrl() {
     var shibaUrl = ""
     try {
         const response = await axios.get("http://shibe.online/api/shibes")
@@ -44,18 +33,21 @@ async function getShibaPicture() {
     return shibaUrl;
 }
 
+async function postImageToPR(picture) {
+    const token = core.getInput('okami-token');
+    const octokit = github.getOctokit(token);
+    const prNumber = context.payload.pull_request.number;
+    const commentBody = `![](${picture})`
+
+    octokit.issues.createComment({
+        ...context.repo,
+        issue_number: prNumber,
+        body: commentBody
+    });
+}
 
 // /api/cats or birds at /api/birds
 run();
-
-/*
-try {
-
-};
-} catch (error) {
-  core.setFailed(error.message);
-}
-*/
 
 
 /***/ }),
