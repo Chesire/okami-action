@@ -119,6 +119,11 @@ async function postImageToPR(context, picture) {
 
     console.log("Posting comment " + commentBody)
 
+    var issues = await octokit.issues.listComments({
+        ...context.repo,
+        issue_number: prNumber
+    })
+    console.log(issues)
     octokit.issues.createComment({
         ...context.repo,
         issue_number: prNumber,
