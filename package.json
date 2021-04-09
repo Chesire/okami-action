@@ -1,29 +1,45 @@
 {
-  "name": "okami",
-  "version": "1.0.0",
+  "name": "okami-action",
+  "version": "0.0.0",
   "description": "GitHub action to post animal images/gifs on PRs",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Chesire/Okami.git"
+    "url": "git+https://github.com/Chesire/okami-action.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Chesire/Okami/issues"
+    "url": "https://github.com/Chesire/okami-action/issues"
   },
-  "homepage": "https://github.com/Chesire/Okami#readme",
+  "homepage": "https://github.com/Chesire/okami-action#readme",
   "dependencies": {
     "@actions/core": "^1.2.6",
     "@actions/github": "^4.0.0",
     "axios": "^0.21.1"
   },
   "devDependencies": {
+    "@commitlint/cli": "^12.1.1",
+    "@commitlint/config-conventional": "^12.1.1",
+    "cz-conventional-changelog": "^3.3.0",
     "eslint": "^7.23.0",
+    "husky": "^6.0.0",
     "prettier": "2.2.1"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog",
+      "maxHeaderWidth": 72,
+      "maxMessageWidth": 100
+    }
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "scripts": {
+    "prepare": "husky install"
   }
 }

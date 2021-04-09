@@ -29,7 +29,3 @@ with:
   okami-token: ${{ secrets.GITHUB_TOKEN }}
   animal-type: "shiba"
 ```
-
-## Development
-
-Run `ncc build index.js --license licenses.txt` before commiting files.
