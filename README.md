@@ -23,7 +23,7 @@ Defaults to `shiba`
 
 ### `update-image`
 
-Flag to denote if a single image be updated on each execution of the action, or a new image posted each time.
+Flag to denote if a single image should be updated on each execution of the action, or a new image posted each time.
 
 - If set to `true`, then a single comment will be created, then updated each time.
 - If set to `false`, then a new comment will be created each time.
@@ -33,7 +33,7 @@ Defaults to `true`
 ## Example usage
 
 ```yaml
-uses: Chesire/okami-action@v2
+uses: Chesire/okami-action@v2.1
 with:
   okami-token: ${{ secrets.GITHUB_TOKEN }}
   animal-type: "shiba"
