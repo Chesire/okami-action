@@ -2,11 +2,9 @@ module.exports =
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 8615:
-/***/ ((__unused_webpack_module, __unused_webpack_exports, __nccwpck_require__) => {
+/***/ 9692:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const core = __nccwpck_require__(9698)
-const github = __nccwpck_require__(1695)
 const axios = __nccwpck_require__(3242)
 
 var animal = {
@@ -17,26 +15,10 @@ var animal = {
     dog: "DOG"
 }
 
-async function run() {
-    const context = github.context
-    if (context.payload.pull_request == null) {
-        console.error("Not currently running in a pull request")
-        return
-    }
-
-    const image = await getAnimalImageUrl()
-    if (image === "") {
-        console.error("No image url found! Not posting a comment")
-    } else {
-        postImageToPR(context, image)
-    }
-}
-
-async function getAnimalImageUrl() {
-    const animalInput = core.getInput('animal-type')
+async function getAnimalImageUrl(animalInput) {
     const animalType = animalInput.toUpperCase()
 
-    console.log("Looking for animal " + animalType)
+    console.log("Looking for animal: " + animalInput)
     if (animalType == animal.shiba) {
         return getShibaImage()
     } else if (animalType == animal.cat) {
@@ -48,7 +30,8 @@ async function getAnimalImageUrl() {
     } else if (animalType == animal.dog) {
         return getDogImage()
     } else {
-        core.setFailed("Invalid animal input" + animalInput)
+        console.error("Invalid animal input: " + animalInput)
+        return ""
     }
 }
 
@@ -98,6 +81,34 @@ async function getDogImage() {
     }
 
     return pictureUrl
+}
+
+module.exports = { getAnimalImageUrl }
+
+
+/***/ }),
+
+/***/ 8615:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const core = __nccwpck_require__(9698)
+const github = __nccwpck_require__(1695)
+const apis = __nccwpck_require__(9692)
+
+async function run() {
+    const context = github.context
+    if (context.payload.pull_request == null) {
+        console.error("Not currently running in a pull request")
+        return
+    }
+
+    var animal = core.getInput('animal-type')
+    const image = await apis.getAnimalImageUrl(animal)
+    if (image === "") {
+        core.setFailed("No image url found! Not posting a comment")
+    } else {
+        postImageToPR(context, image)
+    }
 }
 
 async function postImageToPR(context, picture) {

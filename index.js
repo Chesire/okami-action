@@ -1,14 +1,6 @@
 const core = require('@actions/core')
 const github = require('@actions/github')
-const axios = require('axios')
-
-var animal = {
-    shiba: "SHIBA",
-    cat: "CAT",
-    bird: "BIRD",
-    fox: "FOX",
-    dog: "DOG"
-}
+const apis = require('./apis')
 
 async function run() {
     const context = github.context
@@ -17,80 +9,13 @@ async function run() {
         return
     }
 
-    const image = await getAnimalImageUrl()
+    var animal = core.getInput('animal-type')
+    const image = await apis.getAnimalImageUrl(animal)
     if (image === "") {
-        console.error("No image url found! Not posting a comment")
+        core.setFailed("No image url found! Not posting a comment")
     } else {
         postImageToPR(context, image)
     }
-}
-
-async function getAnimalImageUrl() {
-    const animalInput = core.getInput('animal-type')
-    const animalType = animalInput.toUpperCase()
-
-    console.log("Looking for animal " + animalType)
-    if (animalType == animal.shiba) {
-        return getShibaImage()
-    } else if (animalType == animal.cat) {
-        return getCatImage()
-    } else if (animalType == animal.bird) {
-        return getBirdImage()
-    } else if (animalType == animal.fox) {
-        return getFoxImage()
-    } else if (animalType == animal.dog) {
-        return getDogImage()
-    } else {
-        core.setFailed("Invalid animal input" + animalInput)
-    }
-}
-
-async function getShibaImage() {
-    return getShibeOnlineImage("shibes")
-}
-
-async function getCatImage() {
-    return getShibeOnlineImage("cats")
-}
-
-async function getBirdImage() {
-    return getShibeOnlineImage("birds")
-}
-
-async function getShibeOnlineImage(param) {
-    var pictureUrl = ""
-    try {
-        const response = await axios.get("http://shibe.online/api/" + param)
-        pictureUrl = response.data[0]
-    } catch (error) {
-        console.error(error)
-    }
-
-    return pictureUrl
-}
-
-async function getFoxImage() {
-    var pictureUrl = ""
-    try {
-        const response = await axios.get("https://randomfox.ca/floof/")
-        pictureUrl = response.data.image
-    } catch (error) {
-        console.error(error)
-    }
-
-    return pictureUrl
-}
-
-async function getDogImage() {
-    var pictureUrl = ""
-    try {
-        const response = await axios.get("https://dog.ceo/api/breeds/image/random")
-        pictureUrl = response.data.message
-    } catch (error) {
-        console.error(error)
-    }
-
-    return pictureUrl
 }
 
 async function postImageToPR(context, picture) {
