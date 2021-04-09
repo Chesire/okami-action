@@ -115,8 +115,7 @@ async function run() {
 
 async function postImageToPR(context, picture) {
     const token = core.getInput('okami-token')
-    //const shouldUpdateImage = core.getInput('update-image')
-    var shouldUpdateImage = true
+    const shouldUpdateImage = core.getInput('update-image')
     const octokit = github.getOctokit(token)
     const commentBody = `${actionTag}\n![](${picture})`
     const prNumber = context.payload.pull_request.number

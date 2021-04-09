@@ -8,6 +8,10 @@ inputs:
     description: 'What animal type image to post to the pull request'
     required: false
     default: 'shiba'
+  update-image:
+    description: 'Update a single comment each time this action is executed'
+    required: false
+    default: true
 runs:
   using: 'node12'
   main: 'dist/index.js'
