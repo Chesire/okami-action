@@ -2,6 +2,8 @@ const core = require('@actions/core')
 const github = require('@actions/github')
 const apis = require('./apis')
 
+const actionTag = "<!--okami-action-->"
+
 async function run() {
     const context = github.context
     if (context.payload.pull_request == null) {
@@ -20,19 +22,34 @@ async function run() {
 
 async function postImageToPR(context, picture) {
     const token = core.getInput('okami-token')
+    const shouldUpdateImage = core.getInput('update-image')
     const octokit = github.getOctokit(token)
+    const commentBody = `${actionTag}\n![](${picture})`
     const prNumber = context.payload.pull_request.number
-    const commentBody = `![](${picture})`
 
-    console.log("Posting comment " + commentBody)
-
-    octokit.issues.createComment({
+    const commentsResponse = await octokit.issues.listComments({
         ...context.repo,
-        issue_number: prNumber,
-        body: commentBody
+        issue_number: prNumber
     })
+    const findResult = commentsResponse.data.find(element => element.body.includes(actionTag))
 
-    console.log("Finished createComment")
+    if (shouldUpdateImage && findResult != undefined) {
+        console.log("Updating comment with: " + commentBody)
+        await octokit.issues.updateComment({
+            ...context.repo,
+            comment_id: findResult.id,
+            body: commentBody
+        })
+        console.log("Finished updateComment")
+    } else {
+        console.log("Creating comment with: " + commentBody)
+        await octokit.issues.createComment({
+            ...context.repo,
+            issue_number: prNumber,
+            body: commentBody
+        })
+        console.log("Finished createComment")
+    }
 }
 
 run()
