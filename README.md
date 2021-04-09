@@ -37,4 +37,5 @@ uses: Chesire/okami-action@v2.1
 with:
   okami-token: ${{ secrets.GITHUB_TOKEN }}
   animal-type: "shiba"
+  update-image: true
 ```
