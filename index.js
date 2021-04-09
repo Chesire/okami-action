@@ -2,6 +2,8 @@ const core = require('@actions/core')
 const github = require('@actions/github')
 const apis = require('./apis')
 
+const actionTag = "<!--okami-action-->"
+
 async function run() {
     const context = github.context
     if (context.payload.pull_request == null) {
@@ -20,24 +22,44 @@ async function run() {
 
 async function postImageToPR(context, picture) {
     const token = core.getInput('okami-token')
+    //const shouldUpdateImage = core.getInput('update-image')
+    var shouldUpdateImage = true
     const octokit = github.getOctokit(token)
+    const commentBody = `${actionTag}\n![](${picture})`
     const prNumber = context.payload.pull_request.number
-    const commentBody = `![](${picture})`
 
-    console.log("Posting comment " + commentBody)
-
-    var issues = await octokit.issues.listComments({
+    const commentsResponse = await octokit.issues.listComments({
         ...context.repo,
         issue_number: prNumber
     })
-    console.log(issues)
-    octokit.issues.createComment({
-        ...context.repo,
-        issue_number: prNumber,
-        body: commentBody
-    })
+    const findResult = commentsResponse.data.find(element => element.body.includes(actionTag))
 
-    console.log("Finished createComment")
+    var previousCommentId = undefined
+    if (findResult != undefined) {
+        previousCommentId = findResult.id
+    }
+
+    console.log("Found object")
+    console.log(findResult)
+    console.log("Found id")
+    console.log(previousCommentId)
+
+    if (shouldUpdateImage && previousCommentId != undefined) {
+        console.log("Updating comment with: " + commentBody)
+        octokit.issues.updateComment({
+            ...context.repo,
+            comment_id: previousCommentId
+        })
+        console.log("Finished updateComment")
+    } else {
+        console.log("Creating comment with: " + commentBody)
+        octokit.issues.createComment({
+            ...context.repo,
+            issue_number: prNumber,
+            body: commentBody
+        })
+        console.log("Finished createComment")
+    }
 }
 
 run()
