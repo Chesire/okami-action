@@ -95,6 +95,8 @@ const core = __nccwpck_require__(9698)
 const github = __nccwpck_require__(1695)
 const apis = __nccwpck_require__(9692)
 
+const actionTag = "<!--okami-action-->"
+
 async function run() {
     const context = github.context
     if (context.payload.pull_request == null) {
@@ -113,24 +115,35 @@ async function run() {
 
 async function postImageToPR(context, picture) {
     const token = core.getInput('okami-token')
+    //const shouldUpdateImage = core.getInput('update-image')
+    var shouldUpdateImage = true
     const octokit = github.getOctokit(token)
+    const commentBody = `${actionTag}\n![](${picture})`
     const prNumber = context.payload.pull_request.number
-    const commentBody = `![](${picture})`
 
-    console.log("Posting comment " + commentBody)
-
-    var issues = await octokit.issues.listComments({
+    const commentsResponse = await octokit.issues.listComments({
         ...context.repo,
         issue_number: prNumber
     })
-    console.log(issues)
-    octokit.issues.createComment({
-        ...context.repo,
-        issue_number: prNumber,
-        body: commentBody
-    })
+    const findResult = commentsResponse.data.find(element => element.body.includes(actionTag))
 
-    console.log("Finished createComment")
+    if (shouldUpdateImage && findResult != undefined) {
+        console.log("Updating comment with: " + commentBody)
+        await octokit.issues.updateComment({
+            ...context.repo,
+            comment_id: findResult.id,
+            body: commentBody
+        })
+        console.log("Finished updateComment")
+    } else {
+        console.log("Creating comment with: " + commentBody)
+        await octokit.issues.createComment({
+            ...context.repo,
+            issue_number: prNumber,
+            body: commentBody
+        })
+        console.log("Finished createComment")
+    }
 }
 
 run()
